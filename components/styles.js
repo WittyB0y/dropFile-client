@@ -1,8 +1,8 @@
 import * as Application from 'expo-application';
 
-const LINK = "http://192.168.31.78:8000/"
+// const LINK = "http://192.168.31.78:8000/"
 // const LINK = "http://192.168.64.223:8000/"
-// const LINK ='http://26.242.229.65:8000/'
+const LINK ='http://26.242.229.65:8000/'
 
 export const deviceINFO = {
     id: Application.androidId

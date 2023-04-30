@@ -6,6 +6,7 @@ import MainBtn from "./components/MainBtn";
 import AboutPage from "./components/aboutPage/AboutPage";
 import MainMenu from "./components/profile/MainMenu";
 import SignUp from "./components/signUp/SignUp";
+import Files from "./components/profile/Files/Files";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function Navigate() {
             <Stack.Screen name={'О проекте'} component={AboutPage}/>
             <Stack.Screen name={'Меню'} component={MainMenu}/>
             <Stack.Screen name={'Регистрация'} component={SignUp}/>
+            <Stack.Screen name={'Файлы'} component={Files}/>
         </Stack.Navigator>
     </NavigationContainer>
     );

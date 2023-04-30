@@ -5,9 +5,8 @@ import axios from "axios";
 import pickImage from "./UploadProfilePhoto";
 import CustomButton from "../CustomButton";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import ProfileModal from "./ProfileModal/ProfileModal";
+import ProfileModal from "./ProfileModal";
 import {logout, pusher} from "../bll";
-// import SetCopyBoard from "./SetCopyBoard";
 
 const devIDdev = deviceINFO.id
 
@@ -38,6 +37,11 @@ const MainMenu = ({ route, navigation }) => {
     const [modalWindow, setModalWidow] = useState(false)
     const { token } = route.params;
 
+    const loadScreen = (nameScreen, token= {}, from={}) => {
+        const data = {token, ...from}
+        navigation.navigate(nameScreen, data)
+    }
+
     const buttons = [
         {
             title: 'Загрузить',
@@ -51,7 +55,7 @@ const MainMenu = ({ route, navigation }) => {
         },
         {
             title: 'Файлы',
-            action: () => pickImage(token, setUrl, id),
+            action: () => loadScreen('Файлы', token),
             styles: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.yellow

@@ -13,7 +13,6 @@ export function pusher(message = '', duration = 'SHORT'){
 }
 
 export function logout (token) {
-
     axios.post(linkerURI.logout, {},{ headers: { Authorization: `Token ${token}` } })
         .then( () => pusher('Выход выполнен!'))
         .catch(error => console.log(error))
