@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Droper",
+    "slug": "doter3",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logoApp.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logoApp.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#5b8f94"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "permissions": ["READ_PHONE_STATE"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
