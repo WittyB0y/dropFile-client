@@ -1,8 +1,8 @@
 import {Modal, View, StyleSheet, Image, Dimensions} from "react-native";
 import {AntDesign} from "@expo/vector-icons";
-import CustomButton from "../../CustomButton";
-import pickImage from "../UploadProfilePhoto";
-import {defaultStyles} from "../../styles";
+import CustomButton from "../CustomButton";
+import pickImage from "./UploadProfilePhoto";
+import {defaultStyles} from "../styles";
 
 export default function ProfileModal({state, setState, photoURI, token, setUrl, id}){
     const userWidth = Math.round(Dimensions.get("window").width)

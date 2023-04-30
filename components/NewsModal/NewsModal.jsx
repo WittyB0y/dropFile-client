@@ -47,9 +47,11 @@ export default function NewsModal({state, setState}){
                     {item.text}
                 </Text>
             </View>
-            <View style={modals.link__box}>
-                <TextLink text={'Перейти'} url={item.link} style={modals.linker} key={data.indexOf(item)} />
-            </View>
+            {item.link && (
+                <View style={modals.link__box}>
+                    <TextLink text={'Перейти'} url={item.link} style={modals.linker} key={data.indexOf(item)} />
+                </View>
+            )}
         </View>
     )
 
@@ -201,7 +203,7 @@ const modals = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     linker: {
         textAlign: 'center',

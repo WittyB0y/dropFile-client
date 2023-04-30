@@ -8,8 +8,8 @@ import {pusher} from "./bll";
 
 const LoginScreen = ({navigation}) => {
     // TODO
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('iFuckMyKotik');
+    const [password, setPassword] = useState('fuck');
 
     const loadScreen = (nameScreen, token='', from={}) => {
         const data = {...from, ...token}
