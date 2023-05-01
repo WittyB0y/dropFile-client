@@ -6,7 +6,7 @@ import pickImage from "./UploadProfilePhoto";
 import CustomButton from "../CustomButton";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import ProfileModal from "./ProfileModal";
-import {logout, pusher} from "../bll";
+import {logout, percentWidth, pusher} from "../bll";
 
 const devIDdev = deviceINFO.id
 
@@ -108,15 +108,14 @@ const MainMenu = ({ route, navigation }) => {
                         {url ? (
                             <View style={css.header__image}>
                                 <Image style={css.img} source={{uri: url}}/>
-                                {/*<MaterialCommunityIcons style={css.img__icon} name="gesture-tap" size={34} color="#fff" />*/}
                             </View>
 
-                            ) : <MaterialCommunityIcons name="gesture-tap" size={34} color="#fff" />}
+                            ) : <MaterialCommunityIcons name="gesture-tap" size={22} color="#fff" />}
                     </TouchableWithoutFeedback>
                     <Text style={css.header__text}>Привет, {route.params.login}!!!</Text>
                     <View style={css.header__description}>
                         <Text style={css.header__description__text}>Нажми на фотографию, чтобы обновить её</Text>
-                        <MaterialCommunityIcons name="gesture-tap" size={22} color="#fff" />
+                        <MaterialCommunityIcons name="gesture-tap" size={percentWidth(5)} color="#fff" />
                     </View>
                     {/*<Text style={css.header__description__text}>Нажми на фото профиля, чтобы изменить его</Text>*/}
                 </View>

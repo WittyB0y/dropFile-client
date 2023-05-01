@@ -1,8 +1,7 @@
 import {Animated, Image, StyleSheet, Text, View} from "react-native";
 import {defaultStyles} from "../../styles";
 import CustomButton from "../../CustomButton";
-import {pusher} from "../../bll";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {PanGestureHandler, State} from "react-native-gesture-handler";
 import ModalFile from "./ModalFile";
 
@@ -139,7 +138,7 @@ const css = StyleSheet.create({
         flexDirection: 'row',
     },
     file: {
-        backgroundColor: 'rgb(197,197,197)',
+        backgroundColor: '#303030',
         width: '90%',
 
         display: 'flex',
@@ -181,11 +180,12 @@ const css = StyleSheet.create({
     file__data__text__label: {
         textAlign: 'left',
         fontWeight: '600',
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
+        color: '#d7d7d7'
     },
     file__data__text__description: {
         fontSize: 14,
-        color: '#5a0e9b',
+        color: '#963fe8',
         textAlign: 'right'
     },
     file__profile: {
@@ -204,7 +204,8 @@ const css = StyleSheet.create({
     },
     profile__username: {
         textAlign: 'center',
-        fontSize: 14
+        fontSize: 14,
+        color: '#d7d7d7'
     },
     accessible: {
         width: '100%',

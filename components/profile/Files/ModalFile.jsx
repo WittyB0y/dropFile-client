@@ -1,11 +1,9 @@
-import {Modal, View, StyleSheet, Dimensions} from "react-native";
+import {Modal, View, StyleSheet} from "react-native";
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
-import {pusher} from "../../bll";
+import {percentWidth, pusher} from "../../bll";
 
 const ModalFile = ({state, setState, img}) => {
-    const userWidth = Math.round(Dimensions.get("window").width)
-
     return (
         <Modal visible={state} animationType={'fade'}>
             <View style={css.content}>
@@ -17,10 +15,10 @@ const ModalFile = ({state, setState, img}) => {
                     minScale={.95}
                     pageAnimateTime={300}
                     renderArrowLeft={ () => (
-                        <EvilIcons name="chevron-left" size={userWidth * .1} color="#fff" />
+                        <EvilIcons name="chevron-left" size={percentWidth(10)} color="#fff" />
                     )}
                     renderArrowRight={() => (
-                        <EvilIcons name="chevron-right" size={userWidth * .1} color="#fff" />
+                        <EvilIcons name="chevron-right" size={percentWidth(10)} color="#fff" />
                     )}
                     onMove={() => pusher('Труд освобождает')}
                 />
