@@ -1,31 +1,29 @@
 import {View, Text, StyleSheet, ScrollView} from "react-native";
 import {defaultStyles} from "../../styles";
 import FileBox from "./FileBox";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import {pusher} from "../../bll";
 
 const Files = ({route}) => {
     const {token} = route.params
-    const files = [
-        {
-            photo: 'http://26.242.229.65:8000/media/media/users/1/profile/profile_photo_b4a7eff7-8a96-49d1-82da-8ac35b44e9f2.png',
-            username: 'iFuckMyKotik',
-            created: '2023-04-29 21:30:35.431968',
-            during: '2023-04-24 14:49:02.431968',
-            amount: 20,
-            contentType: 'doc/docx',
-            accessibility: true,
-            name: 'artemkaPassik.docx',
-            slug: ['http://26.242.229.65:8000/media/media/users/1/profile/profile_photo_b4a7eff7-8a96-49d1-82da-8ac35b44e9f2.png', "http://26.242.229.65:8000/media/media/users/1/profile/profile_photo_b4a7eff7-8a96-49d1-82da-8ac35b44e9f2.png"],
-        },
-    ]
-
+    const [data, setData] = useState([{}])
+    useEffect(() => {
+        const getUserData = async () => {
+            const res = await axios.get('http://26.242.229.65:8000/api/v1/sharedfiles/', { headers: { Authorization: `Token ${token}` } })
+            setData(res.data)
+        }
+        getUserData()
+    }, [])
     return(
         <View style={css.screen}>
             <ScrollView>
                 <View style={css.title__box}>
-                    <Text style={css.title}>Всего файлов: {files.length}</Text>
+                    <Text style={css.title}>Всего файлов: {data.filter( elem => elem.userSeeClient).length}</Text>
+                    <Text>Свайпни файл влево, чтобы просмотреть</Text>
                 </View>
-                {files.map((element, index) => (
-                    <FileBox file={element} key={index} />
+                {data.map((element, index) => ( element.userSeeClient &&
+                    <FileBox file={element} key={index} token={token} />
                 ))}
             </ScrollView>
         </View>
