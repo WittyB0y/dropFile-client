@@ -2,30 +2,44 @@ import {Modal, View, StyleSheet} from "react-native";
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
 import {percentWidth, pusher} from "../../bll";
+import {useState} from "react";
 
 const ModalFile = ({state, setState, img}) => {
+    const [photo, setPhoto] = useState(0)
     return (
         <Modal visible={state} animationType={'fade'}>
             <View style={css.content}>
                 <ImageViewer
-                    imageUrls={img.map( elem => ({url: elem}))}
                     saveToLocalByLongPress={false}
-                    enableSwipeDown={false}
+                    enableSwipeDown={true}
+                    onSwipeDown={() => setState(false)}
                     style={css.img}
-                    minScale={.95}
+                    minScale={1}
                     pageAnimateTime={300}
                     renderArrowLeft={ () => (
-                        <EvilIcons name="chevron-left" size={percentWidth(10)} color="#fff" />
+                        <EvilIcons
+                            name="chevron-left"
+                            size={percentWidth(10)}
+                            color="#fff"
+                            onPress={() => photo >= 1 && setPhoto(photo - 1)}
+                        />
                     )}
                     renderArrowRight={() => (
-                        <EvilIcons name="chevron-right" size={percentWidth(10)} color="#fff" />
+                        <EvilIcons
+                            name="chevron-right"
+                            size={percentWidth(10)}
+                            color="#fff"
+                            onPress={() => photo < img.length - 1 && setPhoto(photo + 1)}
+                        />
                     )}
-                    onMove={() => pusher('Труд освобождает')}
+                    index={photo}
+                    imageUrls={img.map( elem => ({url: elem.fileLink}))}
+                    // onMove={() => pusher('Труд освобождает')}
                 />
 
                 <AntDesign
                     name="close"
-                    size={userWidth * .12}
+                    size={percentWidth(12)}
                     color="#fff"
                     style={css.closeIcon}
                     onPress={() => setState(false)}

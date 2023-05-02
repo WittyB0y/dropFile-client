@@ -20,3 +20,7 @@ export function logout (token) {
 export function percentWidth(percent){
     return Math.round(Dimensions.get("window").width) * (percent/100)
 }
+
+export const zeroOrNo = (num, UTC = 0) => {
+    return  (num + UTC).toString().length === 1 ? `0${num + UTC}` : num + UTC
+}
