@@ -4,7 +4,7 @@ import CustomButton from "../../CustomButton";
 import {useRef, useState} from "react";
 import {PanGestureHandler, State} from "react-native-gesture-handler";
 import ModalFile from "./ModalFile";
-import {zeroOrNo} from "../../bll";
+import {percentWidth, zeroOrNo} from "../../bll";
 
 const FileBox = ({ file }) => {
     const [swipe, setSwipe] = useState(false)
@@ -22,14 +22,14 @@ const FileBox = ({ file }) => {
             }).start()
             setTimeout(() => {
                 setSwipe(false)
-            }, 110)
+            }, 100)
             setModalWindow(true)
         },
         style: {
             btnBox: {
                 backgroundColor: '#250d7c',
                 width: '30%',
-                right: 20,
+                right: '5%',
                 position: 'absolute',
 
                 display: 'flex',
@@ -38,7 +38,8 @@ const FileBox = ({ file }) => {
             },
             btnText: {
                 color: '#fff',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontSize: percentWidth(5)
             }
         }
     }
@@ -52,13 +53,13 @@ const FileBox = ({ file }) => {
     const handleGesture = ({nativeEvent}) => {
         if(accessible && nativeEvent.translationX < -50 && nativeEvent.state === State.ACTIVE){
             Animated.timing(offsetX, {
-                toValue: -150,
+                toValue: -percentWidth(35),
                 duration: 400,
                 useNativeDriver: true
             }).start()
             setTimeout(() => {
                 setSwipe(true)
-            }, 300)
+            }, 360)
         } else if (accessible && nativeEvent.translationX >= 0 && nativeEvent.state === State.ACTIVE || !swipe){
             Animated.timing(offsetX, {
                 toValue: 0,
@@ -71,8 +72,6 @@ const FileBox = ({ file }) => {
         }
     }
 
-    // console.log(file.createdAt)
-    // console.log(file.existBefore)
     return (
         <View style={css.box}>
             <ModalFile state={modalWindow} setState={setModalWindow} img={file.renderdata} />
@@ -173,6 +172,8 @@ const css = StyleSheet.create({
     file__data__box: {
         width: '100%',
         padding: 3,
+        // backgroundColor: '#831010',
+        position: 'relative',
 
         borderBottomColor: '#578b90',
         borderBottomWidth: 2,
@@ -185,7 +186,8 @@ const css = StyleSheet.create({
         flexDirection: 'row',
     },
     file__data_output: {
-        // backgroundColor: '#520202',
+        // backgroundColor: '#4b42c2',
+        width: '50%',
         position: 'relative',
 
         marginTop: 4,
