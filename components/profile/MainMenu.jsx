@@ -5,9 +5,8 @@ import axios from "axios";
 import pickImage from "./UploadProfilePhoto";
 import CustomButton from "../CustomButton";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import ProfileModal from "./ProfileModal/ProfileModal";
-import {logout, pusher} from "../bll";
-// import SetCopyBoard from "./SetCopyBoard";
+import ProfileModal from "./ProfileModal";
+import {logout, percentWidth, pusher} from "../bll";
 
 const devIDdev = deviceINFO.id
 
@@ -34,14 +33,19 @@ async function controllerPermis(navigation, data, userid, token) {
 
 const MainMenu = ({ route, navigation }) => {
     const [url, setUrl] = useState('');
-    const [id, setId] = useState('')
-    const [modalWindow, setModalWidow] = useState(false)
+    const [id, setId] = useState('');
+    const [modalWindow, setModalWidow] = useState(false);
     const { token } = route.params;
+
+    const loadScreen = (nameScreen, token= {}, from={}) => {
+        const data = {token, ...from}
+        navigation.navigate(nameScreen, data)
+    }
 
     const buttons = [
         {
             title: 'Загрузить',
-            action: () => pickImage(token, setUrl, id),
+            action: () => loadScreen('Загрузки', token),
             styles: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.green
@@ -51,7 +55,7 @@ const MainMenu = ({ route, navigation }) => {
         },
         {
             title: 'Файлы',
-            action: () => pickImage(token, setUrl, id),
+            action: () => loadScreen('Файлы', token),
             styles: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.yellow
@@ -104,15 +108,14 @@ const MainMenu = ({ route, navigation }) => {
                         {url ? (
                             <View style={css.header__image}>
                                 <Image style={css.img} source={{uri: url}}/>
-                                {/*<MaterialCommunityIcons style={css.img__icon} name="gesture-tap" size={34} color="#fff" />*/}
                             </View>
 
-                            ) : <MaterialCommunityIcons name="gesture-tap" size={34} color="#fff" />}
+                            ) : <MaterialCommunityIcons name="gesture-tap" size={22} color="#fff" />}
                     </TouchableWithoutFeedback>
                     <Text style={css.header__text}>Привет, {route.params.login}!!!</Text>
                     <View style={css.header__description}>
                         <Text style={css.header__description__text}>Нажми на фотографию, чтобы обновить её</Text>
-                        <MaterialCommunityIcons name="gesture-tap" size={22} color="#fff" />
+                        <MaterialCommunityIcons name="gesture-tap" size={percentWidth(5)} color="#fff" />
                     </View>
                     {/*<Text style={css.header__description__text}>Нажми на фото профиля, чтобы изменить его</Text>*/}
                 </View>

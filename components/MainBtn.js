@@ -5,6 +5,7 @@ import CustomButton from "./CustomButton";
 import NewsModal from "./NewsModal/NewsModal";
 
 export default function MainBtn({navigation}) {
+    // TODO
     const [modalWindow, setModalWindow] = useState(true)
 
     const loadScreen = (nameScreen, token='', from={}) => {
