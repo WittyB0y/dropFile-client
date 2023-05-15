@@ -1,4 +1,4 @@
-import {Modal, View, StyleSheet} from "react-native";
+import {Modal, View, StyleSheet, Text} from "react-native";
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
 import {percentWidth, pusher} from "../../bll";
@@ -16,7 +16,7 @@ const ModalFile = ({state, setState, img}) => {
                     style={css.img}
                     minScale={1}
                     pageAnimateTime={300}
-                    renderArrowLeft={ () => (
+                    renderArrowLeft={() => (
                         <EvilIcons
                             name="chevron-left"
                             size={percentWidth(10)}
@@ -34,13 +34,19 @@ const ModalFile = ({state, setState, img}) => {
                     )}
                     index={photo}
                     imageUrls={img.map( elem => ({url: elem.fileLink}))}
-                    // onMove={() => pusher('Труд освобождает')}
+                    renderIndicator={(currentIndex, allSize) => (
+                        <View style={css.counter__box}>
+                            <Text style={css.counter}>
+                                {photo + 1}/{img.length}
+                            </Text>
+                        </View>
+                    )}
                 />
 
                 <AntDesign
                     name="close"
                     size={percentWidth(12)}
-                    color="#fff"
+                    color="#d4d4d4"
                     style={css.closeIcon}
                     onPress={() => setState(false)}
                 />
@@ -65,20 +71,23 @@ const css = StyleSheet.create({
     counter__box: {
         paddingHorizontal: 3,
         paddingVertical: 7,
-        backgroundColor: '#fff',
+        backgroundColor: '#333',
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
         width: '30%',
-
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        left: '35%',
+        right: '35%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
     },
     counter: {
         textAlign: 'center',
         fontSize: 22,
         fontWeight: '700',
-        letterSpacing: 2
+        letterSpacing: 2,
+        color: '#d4d4d4'
     },
 
     img: {
