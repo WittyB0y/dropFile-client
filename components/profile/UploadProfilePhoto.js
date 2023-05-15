@@ -26,6 +26,7 @@ export default async function pickImage(token, func, id) {
             type: `image/${fileType}`,
             name: `photo.${fileType}`,
         });
+        formData.append('userid', id);
         console.log('axios', id)
         axios
             .patch(`${linkerURI.upPhoto}${id}/`, formData, {
