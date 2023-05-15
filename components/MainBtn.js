@@ -16,6 +16,7 @@ export default function MainBtn({navigation}) {
         {
             title: 'Войти',
             action: () => {loadScreen('Страница авторизации')},
+            isActive: true,
             style: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.green
@@ -26,6 +27,7 @@ export default function MainBtn({navigation}) {
         {
             title: 'Регистрация',
             action: () => {loadScreen('Регистрация', '',{from: 'Главная'})},
+            isActive: true,
             style: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.yellow
@@ -36,6 +38,7 @@ export default function MainBtn({navigation}) {
         {
             title: 'Новости',
             action: () => {setModalWindow(true)},
+            isActive: true,
             style: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.orange
@@ -46,6 +49,7 @@ export default function MainBtn({navigation}) {
         {
             title: 'О проекте',
             action: () => {loadScreen('О проекте')},
+            isActive: true,
             style: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.purple
@@ -68,7 +72,7 @@ export default function MainBtn({navigation}) {
                     {Buttons.map( (elem, index) => {
                         return (
                             <View style={styles.button} key={index}>
-                                <CustomButton key={index} text={elem.title} actionFunc={elem.action} style={{btnBox: elem.style.btnBox, btnText: elem.style.btnText}}/>
+                                <CustomButton key={index} text={elem.title} isActive={elem.isActive} actionFunc={elem.action} style={{btnBox: elem.style.btnBox, btnText: elem.style.btnText}}/>
                             </View>
                     )})}
                 </ScrollView>
