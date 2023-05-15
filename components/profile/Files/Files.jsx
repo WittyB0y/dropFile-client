@@ -1,16 +1,17 @@
 import {View, Text, StyleSheet, ScrollView} from "react-native";
-import {defaultStyles} from "../../styles";
+import {defaultStyles, LINK} from "../../styles";
 import FileBox from "./FileBox";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {pusher} from "../../bll";
 
 const Files = ({route}) => {
     const {token} = route.params
     const [data, setData] = useState([{}])
     useEffect(() => {
         const getUserData = async () => {
-            const res = await axios.get('http://26.242.229.65:8000/api/v1/sharedfiles/', { headers: { Authorization: `Token ${token}` } })
+            console.log(token)
+            const res = await axios.get(`${LINK}api/v1/sharedfiles/`, { headers: { Authorization: `Token ${token}` } })
+            console.log(res.data)
             setData(res.data)
         }
         getUserData()

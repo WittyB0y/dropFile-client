@@ -33,8 +33,8 @@ async function controllerPermis(navigation, data, userid, token) {
 
 const MainMenu = ({ route, navigation }) => {
     const [url, setUrl] = useState('');
-    const [id, setId] = useState('')
-    const [modalWindow, setModalWidow] = useState(false)
+    const [id, setId] = useState('');
+    const [modalWindow, setModalWidow] = useState(false);
     const { token } = route.params;
 
     const loadScreen = (nameScreen, token= {}, from={}) => {
@@ -45,7 +45,7 @@ const MainMenu = ({ route, navigation }) => {
     const buttons = [
         {
             title: 'Загрузить',
-            action: () => pickImage(token, setUrl, id),
+            action: () => loadScreen('Загрузки', token),
             styles: {
                 btnBox: {
                     backgroundColor: defaultStyles.buttons.green
