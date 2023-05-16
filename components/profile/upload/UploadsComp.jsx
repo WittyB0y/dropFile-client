@@ -66,15 +66,15 @@ const UploadsComp = ({route}) => {
         }
         setFileUri(null)
     };
-    const [da, setData] = useState([{}])
+    const [data, setData] = useState([])
     useEffect(() => {
         const getFiles = async () => {
             console.log(token)
             const res = await axios.get(linkerURI.myfiles, { headers: { Authorization: `Token ${token}` } })
 
             setData(res.data)
-            console.log(da)
-            console.log('data')
+            console.log(data)
+            // console.log('data')
         }
         getFiles()
     }, [])
@@ -96,9 +96,9 @@ const UploadsComp = ({route}) => {
                 isActive={fileUri}
                 style={{btnBox: {marginVertical: 3}, btnText: {}}}
             />
-            {/*<Text>Кол-во файлов: {da.length}</Text>*/}
+            <Text>Кол-во файлов: {data.length}</Text>
             <ScrollView>
-                {/*{da.map( (elem, index) => <UploadFile file={elem} key={index} />)}*/}
+                {data.map( elem => <UploadFile file={elem} key={data.indexOf(elem)} />)}
             </ScrollView>
         </View>
     );
