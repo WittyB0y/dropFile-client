@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 
-export default function CustomButton({text, actionFunc, style = {btnBox: {}, btnText: {}}}){
+export default function CustomButton({text, actionFunc, isActive = true , style = {btnBox: {}, btnText: {}}}){
     return (
-        <TouchableWithoutFeedback onPress={actionFunc} >
+        <TouchableWithoutFeedback onPress={actionFunc} disabled={!isActive} >
             <View style={{...css.buttonBox, ...style.btnBox}}>
                 <Text style={{...css.buttonText, ...style.btnText}}>{text}</Text>
             </View>

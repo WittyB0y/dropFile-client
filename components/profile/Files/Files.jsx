@@ -4,7 +4,7 @@ import FileBox from "./FileBox";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const Files = ({route}) => {
+const Files = ({route, url}) => {
     const {token} = route.params
     const [data, setData] = useState([{}])
     useEffect(() => {

@@ -1,15 +1,15 @@
+import ModalFile from "../Files/ModalFile";
+import {PanGestureHandler, State} from "react-native-gesture-handler";
 import {Animated, Image, StyleSheet, Text, View} from "react-native";
 import {defaultStyles} from "../../styles";
 import CustomButton from "../../CustomButton";
-import {useRef, useState} from "react";
-import {PanGestureHandler, State} from "react-native-gesture-handler";
-import ModalFile from "./ModalFile";
 import {percentWidth, zeroOrNo} from "../../bll";
+import {useRef, useState} from "react";
 
-const FileBox = ({ file }) => {
+const UploadFile = ({file}) => {
+    console.log(file)
     const [swipe, setSwipe] = useState(false)
     const [modalWindow, setModalWindow] = useState(false)
-    const accessible = Date.now() <= new Date(Date.parse(file.existBefore))
     const offsetX = useRef(new Animated.Value(0)).current;
 
     const btn = {
@@ -43,15 +43,28 @@ const FileBox = ({ file }) => {
             }
         }
     }
-    const getFullDate = (bigDate) => {
+    const fields = [
+        {fieldName: 'Тип файла', data: file.content_type, short: false, isDate: false},
+        {fieldName: 'Имя файла', data: file.name, short: true, isDate: false},
+        {fieldName: 'Дата создания', data: file.createdAt, short: false, isDate: true},
+        {fieldName: 'Скачиваний', data: file.downloded, short: false, isDate: false},
+        {fieldName: 'Ссылка на файл', data: file.file, short: true, isDate: false},
+        {fieldName: 'Просмотров', data: file.seen, short: false, isDate: false},
+        // TODO ↓
+        {fieldName: 'Хз что это', data: file.slug, short: false, isDate: false},
+    ]
+    // console.log(fields)
+    const getFullDate = (bigDate, skip) => {
+        if (skip) return
         const dd = new Date(Date.parse(bigDate))
         return `${zeroOrNo(dd.getDate())}.${zeroOrNo(dd.getUTCMonth(), 1)}.${dd.getFullYear()} ${zeroOrNo(dd.getUTCHours(), 3)}:${zeroOrNo(dd.getMinutes())}`
     }
-    const fileNaming = (fileName) => {
+    const fileNaming = (fileName, skip) => {
+        if (skip) return fileName
         return fileName.replace(/^(.{6}).*?(\.[^.]+)$/, (match, p1, p2) => p1 + '...' + p2) // "Screen...png"
     }
     const handleGesture = ({nativeEvent}) => {
-        if(accessible && nativeEvent.translationX < -50 && nativeEvent.state === State.ACTIVE){
+        if(file.access && nativeEvent.translationX < -50 && nativeEvent.state === State.ACTIVE){
             Animated.timing(offsetX, {
                 toValue: -percentWidth(35),
                 duration: 400,
@@ -60,7 +73,7 @@ const FileBox = ({ file }) => {
             setTimeout(() => {
                 setSwipe(true)
             }, 360)
-        } else if (accessible && nativeEvent.translationX >= 0 && nativeEvent.state === State.ACTIVE || !swipe){
+        } else if (file.access && nativeEvent.translationX >= 0 && nativeEvent.state === State.ACTIVE || !swipe){
             Animated.timing(offsetX, {
                 toValue: 0,
                 duration: 400,
@@ -71,55 +84,41 @@ const FileBox = ({ file }) => {
             }, 110)
         }
     }
-
     return (
         <View style={css.box}>
-            <ModalFile state={modalWindow} setState={setModalWindow} img={file.renderdata} />
+            {/*<ModalFile state={modalWindow} setState={setModalWindow} img={file.renderdata} />*/}
 
             <PanGestureHandler onGestureEvent={handleGesture} activeOffsetX={[-10, 10]}>
                 <Animated.View style={{...css.file, transform: [{ translateX: offsetX }]}}>
                     <View style={css.file}>
                         <View style={css.verticalData}>
                             <View style={css.file__profile}>
-                                <Image source={{ uri : file.fileid.userid.photo}} style={css.profile__img} />
+                                <Image source={{ uri : 'https://i.yapx.ru/WCenU.png'}} style={css.profile__img} />
                             </View>
 
                             <View style={css.file__data}>
-                                {file.fileid && (
+                                {fields.map( element => (
                                     <View style={css.file__data__box}>
-                                        <Text style={css.file__data__text__label}>Имя файла:</Text>
+                                        <View style={css.file__data__text__box}>
+                                            <Text style={css.file__data__text__label}>{element.fieldName}: </Text>
+                                        </View>
                                         <View style={css.file__data_output}>
-                                            <Text style={css.file__data__text__description}> {fileNaming(file.fileid.name)}</Text>
+                                            <Text style={css.file__data__text__description}>{element.isDate ? getFullDate(element.data, !element.isDate) : fileNaming(element.data, !element.short)}</Text>
                                         </View>
                                     </View>
-                                )}
-                                {file.createdAt && (
-                                    <View style={css.file__data__box}>
-                                        <Text style={css.file__data__text__label}>Дата создания:</Text>
-                                        <View style={css.file__data_output}>
-                                            <Text style={css.file__data__text__description}> {getFullDate(file.createdAt)}</Text>
-                                        </View>
-                                    </View>
-                                )}
-                                {file.existBefore && (
-                                    <View style={css.file__data__box}>
-                                        <Text style={css.file__data__text__label}>Доступно до:</Text>
-                                        <View style={css.file__data_output}>
-                                            <Text style={css.file__data__text__description}> {getFullDate(file.existBefore)}</Text>
-                                        </View>
-                                    </View>
-                                )}
+                                ))}
                             </View>
+
                         </View>
                     </View>
 
-                    { accessible ? (
+                    { file.access ? (
                         <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.green}}>
                             <Text style={css.accessible__text}>Доступно</Text>
                         </View>
                     ) : (
                         <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.orange}}>
-                            <Text style={css.accessible__text}>Время вышло</Text>
+                            <Text style={css.accessible__text}>Недоступно</Text>
                         </View>
                     )}
                 </Animated.View>
@@ -183,18 +182,26 @@ const css = StyleSheet.create({
 
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         flexDirection: 'row',
+    },
+    file__data__text__box: {
+        // backgroundColor: '#5d983f',
+        height: '100%',
+        width: '45%',
+        position: 'relative',
     },
     file__data_output: {
         // backgroundColor: '#4b42c2',
-        width: '50%',
+        height: '100%',
+        width: '55%',
         position: 'relative',
 
         marginTop: 4,
-        marginRight: 4
+        marginRight: 4,
     },
     file__data__text__label: {
-        textAlign: 'left',
+        textAlign: 'center',
         fontWeight: '600',
         // textDecorationLine: 'underline',
         color: '#d4d4d4'
@@ -202,11 +209,12 @@ const css = StyleSheet.create({
     file__data__text__description: {
         fontSize: 14,
         color: '#bebebe',
-        textAlign: 'left'
+        textAlign: 'center',
+
     },
     file__profile: {
         // backgroundColor: 'rgba(161,0,187,0.5)',
-        paddingVertical: 5,
+        paddingVertical: 7,
         width: '30%',
 
         display: 'flex',
@@ -216,7 +224,8 @@ const css = StyleSheet.create({
     profile__img: {
         width: '90%',
         aspectRatio: '1/1',
-        borderRadius: 100
+        // padding: 2,
+        // borderRadius: 100
     },
     profile__username: {
         textAlign: 'center',
@@ -241,4 +250,4 @@ const css = StyleSheet.create({
     },
 })
 
-export default FileBox
+export default UploadFile

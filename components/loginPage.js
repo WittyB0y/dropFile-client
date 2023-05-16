@@ -9,7 +9,7 @@ import {pusher} from "./bll";
 const LoginScreen = ({navigation}) => {
     // TODO
     const [username, setUsername] = useState('act');
-    const [password, setPassword] = useState('08011955');
+    const [password, setPassword] = useState('08011955Artem');
 
     const loadScreen = (nameScreen, token='', from={}) => {
         const data = {...from, ...token}
@@ -53,6 +53,7 @@ const LoginScreen = ({navigation}) => {
         {
             text: 'Войти',
             action: handleLogin,
+            isActive: true,
             styles: {
                 btnBox: {
                     ...style.buttonBox,
@@ -66,6 +67,7 @@ const LoginScreen = ({navigation}) => {
         {
             text: 'Регистрация',
             action: () => loadScreen('Регистрация','',{from:'Страница авторизации'}),
+            isActive: true,
             styles: {
                 btnBox: {
                     ...style.buttonBox,
@@ -98,7 +100,7 @@ const LoginScreen = ({navigation}) => {
                         style={style.inputField}
                     />
                     <View style={style.buttonField}>
-                        {buttons.map( (element, index) => <CustomButton text={element.text} actionFunc={element.action} style={element.styles} key={index} />)}
+                        {buttons.map( (element, index) => <CustomButton text={element.text} isActive={element.isActive} actionFunc={element.action} style={element.styles} key={index} />)}
                     </View>
                 </View>
             </View>

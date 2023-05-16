@@ -1,6 +1,6 @@
 import {Dimensions, ToastAndroid} from "react-native";
 import axios from "axios";
-import {linkerURI} from "./styles";
+import {LINK, linkerURI} from "./styles";
 export function pusher(message = '', duration = 'SHORT'){
     if (duration.toLowerCase() === 'short') {
         ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.BOTTOM)
@@ -23,4 +23,10 @@ export function percentWidth(percent){
 
 export const zeroOrNo = (num, UTC = 0) => {
     return  (num + UTC).toString().length === 1 ? `0${num + UTC}` : num + UTC
+}
+
+export async function requesterFunc(method, link, dataAuth) {
+    if (method==='GET') {
+    const data = await axios.get(link, dataAuth)
+    }
 }
