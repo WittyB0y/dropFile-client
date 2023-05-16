@@ -1,37 +1,40 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import axios from 'axios';
-import {defaultStyles} from "../../styles";
+import {defaultStyles, LINK, linkerURI} from "../../styles";
 import CustomButton from "../../CustomButton";
 import UploadFile from "./UploadFile";
+import {pusher, requesterFunc} from "../../bll";
 
 const UploadsComp = ({route}) => {
     const { token } = route.params;
     const [fileUri, setFileUri] = useState(null);
+    // const da = requesterFunc('GET', linkerURI.myfiles, { headers: { Authorization: `Token ${token}` } }).data
+    // console.log(da)
 
-    const da = [
-        {
-            "slug": "5b769e9f-b4d6-4fa1-a664-1e54970b6562",
-            "createdAt": "2023-05-15T21:54:52.143472+03:00",
-            "downloded": 0,
-            "seen": -1,
-            "file": "http://26.242.229.65:8000/5b769e9f-b4d6-4fa1-a664-1e54970b6562.rar",
-            "name": "Файлы для Mac OC.rar",
-            "content_type": "application/octet-stream",
-            "access": false
-        },
-        {
-            "slug": "5b769e9f-b4d6-4fa1-a664-1e54970b6562",
-            "createdAt": "2023-05-15T21:54:52.143472+03:00",
-            "downloded": 0,
-            "seen": -1,
-            "file": "http://26.242.229.65:8000/5b769e9f-b4d6-4fa1-a664-1e54970b6562.rar",
-            "name": "Файлы для Mac OC.rar",
-            "content_type": "application/octet-stream",
-            "access": true
-        }
-    ]
+    // const da = [
+    //     {
+    //         "slug": "5b769e9f-b4d6-4fa1-a664-1e54970b6562",
+    //         "createdAt": "2023-05-15T21:54:52.143472+03:00",
+    //         "downloded": 0,
+    //         "seen": -1,
+    //         "file": "http://26.242.229.65:8000/5b769e9f-b4d6-4fa1-a664-1e54970b6562.rar",
+    //         "name": "Файлы для Mac OC.rar",
+    //         "content_type": "application/octet-stream",
+    //         "access": false
+    //     },
+    //     {
+    //         "slug": "5b769e9f-b4d6-4fa1-a664-1e54970b6562",
+    //         "createdAt": "2023-05-15T21:54:52.143472+03:00",
+    //         "downloded": 0,
+    //         "seen": -1,
+    //         "file": "http://26.242.229.65:8000/5b769e9f-b4d6-4fa1-a664-1e54970b6562.rar",
+    //         "name": "Файлы для Mac OC.rar",
+    //         "content_type": "application/octet-stream",
+    //         "access": true
+    //     }
+    // ]
 
     const handleFilePick = async () => {
         // { type: 'application/zip' }
@@ -51,18 +54,30 @@ const UploadsComp = ({route}) => {
             type: 'multipart/form-data',
         });
         try {
-            const response = await axios.post('http://192.168.31.78:8000/api/v1/loadfiles/', formData, {
+            const response = await axios.post(linkerURI.loadfiles, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Token ${token}`,
                 },
             });
-            console.log(response.data);
+            if (response.data === 'Файл должен быть с расширением .zip') {pusher('Файл должен быть с расширением .zip')}
         } catch (error) {
             console.log(error);
         }
         setFileUri(null)
     };
+    const [da, setData] = useState([{}])
+    useEffect(() => {
+        const getFiles = async () => {
+            console.log(token)
+            const res = await axios.get(linkerURI.myfiles, { headers: { Authorization: `Token ${token}` } })
+
+            setData(res.data)
+            console.log(da)
+            console.log('data')
+        }
+        getFiles()
+    }, [])
 
     return (
         <View style={css.bg}>
@@ -81,9 +96,9 @@ const UploadsComp = ({route}) => {
                 isActive={fileUri}
                 style={{btnBox: {marginVertical: 3}, btnText: {}}}
             />
-            <Text>Кол-во файлов: {da.length}</Text>
+            {/*<Text>Кол-во файлов: {da.length}</Text>*/}
             <ScrollView>
-                {da.map( (elem, index) => <UploadFile file={elem} key={index} />)}
+                {/*{da.map( (elem, index) => <UploadFile file={elem} key={index} />)}*/}
             </ScrollView>
         </View>
     );
