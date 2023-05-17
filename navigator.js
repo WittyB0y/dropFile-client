@@ -8,6 +8,7 @@ import MainMenu from "./components/profile/MainMenu";
 import SignUp from "./components/signUp/SignUp";
 import Files from "./components/profile/Files/Files";
 import UploadsComp from "./components/profile/upload/UploadsComp"
+import Test from "./components/Test"
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ export default function Navigate() {
             <Stack.Screen name={'Регистрация'} component={SignUp}/>
             <Stack.Screen name={'Файлы'} component={Files}/>
             <Stack.Screen name={'Загрузки'} component={UploadsComp}/>
+            <Stack.Screen name={'Тестовая страница'} component={Test}/>
         </Stack.Navigator>
     </NavigationContainer>
     );

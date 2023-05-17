@@ -76,6 +76,18 @@ const MainMenu = ({ route, navigation }) => {
                 btnText: {},
             }
         },
+        {
+            title: 'Тестовая страница',
+            action: () => {
+                navigation.navigate('Тестовая страница');
+            },
+            styles: {
+                btnBox: {
+                    backgroundColor: defaultStyles.buttons.orange
+                },
+                btnText: {},
+            }
+        },
     ]
 
     useEffect(() => {

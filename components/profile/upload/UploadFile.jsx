@@ -1,19 +1,17 @@
-import ModalFile from "../Files/ModalFile";
 import {PanGestureHandler, State} from "react-native-gesture-handler";
 import {Animated, Image, StyleSheet, Text, View} from "react-native";
-import {defaultStyles} from "../../styles";
 import CustomButton from "../../CustomButton";
-import {percentWidth, zeroOrNo} from "../../bll";
+import {percentWidth} from "../../bll";
 import {useRef, useState} from "react";
+import {defaultStyles} from "../../styles";
 
 const UploadFile = ({file}) => {
-    console.log(file)
     const [swipe, setSwipe] = useState(false)
     const [modalWindow, setModalWindow] = useState(false)
     const offsetX = useRef(new Animated.Value(0)).current;
 
     const btn = {
-        title: 'Просмотр',
+        title: 'Найсроить доступ',
         action: () => {
             Animated.timing(offsetX, {
                 toValue: 0,
@@ -47,24 +45,37 @@ const UploadFile = ({file}) => {
         {fieldName: 'Тип файла', data: file.content_type, short: false, isDate: false},
         {fieldName: 'Имя файла', data: file.name, short: true, isDate: false},
         {fieldName: 'Дата создания', data: file.createdAt, short: false, isDate: true},
-        {fieldName: 'Скачиваний', data: file.downloded, short: false, isDate: false},
-        {fieldName: 'Ссылка на файл', data: file.file, short: true, isDate: false},
-        {fieldName: 'Просмотров', data: file.seen, short: false, isDate: false},
-        // TODO ↓
-        {fieldName: 'Хз что это', data: file.slug, short: false, isDate: false},
     ]
-    // console.log(fields)
     const getFullDate = (bigDate, skip) => {
         if (skip) return
-        const dd = new Date(Date.parse(bigDate))
-        return `${zeroOrNo(dd.getDate())}.${zeroOrNo(dd.getUTCMonth(), 1)}.${dd.getFullYear()} ${zeroOrNo(dd.getUTCHours(), 3)}:${zeroOrNo(dd.getMinutes())}`
+        const formatDate = (dateTimeString) => {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                fractionalSecondDigits: 6,
+                timeZoneName: 'short',
+                timeZone: 'Europe/Minsk', // Указываем временную зону Минск, Беларусь
+            };
+
+            const dt = new Date(dateTimeString);
+            const formatter = new Intl.DateTimeFormat('ru', options);
+
+            return formatter.format(dt);
+        };
+
+        const dateTimeString = new Date(Date.parse(bigDate));
+        return formatDate(dateTimeString);
+
     }
     const fileNaming = (fileName, skip) => {
         if (skip) return fileName
         return fileName.replace(/^(.{6}).*?(\.[^.]+)$/, (match, p1, p2) => p1 + '...' + p2) // "Screen...png"
     }
     const handleGesture = ({nativeEvent}) => {
-        if(file.access && nativeEvent.translationX < -50 && nativeEvent.state === State.ACTIVE){
+        if(nativeEvent.translationX < -50 && nativeEvent.state === State.ACTIVE){
             Animated.timing(offsetX, {
                 toValue: -percentWidth(35),
                 duration: 400,
@@ -73,7 +84,7 @@ const UploadFile = ({file}) => {
             setTimeout(() => {
                 setSwipe(true)
             }, 360)
-        } else if (file.access && nativeEvent.translationX >= 0 && nativeEvent.state === State.ACTIVE || !swipe){
+        } else if ( nativeEvent.translationX >= 0 && nativeEvent.state === State.ACTIVE || !swipe){
             Animated.timing(offsetX, {
                 toValue: 0,
                 duration: 400,
@@ -84,6 +95,15 @@ const UploadFile = ({file}) => {
             }, 110)
         }
     }
+
+    const getMinsAgo = (bigDate) => {
+        const currentDate = new Date();
+        const serverDate = new Date(Date.parse(bigDate));
+        const timeDiffMilliseconds = currentDate - serverDate;
+        const timeDiffMinutes = Math.floor(timeDiffMilliseconds / 60000);
+        return `${timeDiffMinutes} мин. назад`
+    }
+
     return (
         <View style={css.box}>
             {/*<ModalFile state={modalWindow} setState={setModalWindow} img={file.renderdata} />*/}
@@ -111,16 +131,10 @@ const UploadFile = ({file}) => {
 
                         </View>
                     </View>
+                    <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.green}}>
+                        <Text style={css.accessible__text}>{getMinsAgo(fields[2].data)}</Text>
+                    </View>
 
-                    { file.access ? (
-                        <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.green}}>
-                            <Text style={css.accessible__text}>Доступно</Text>
-                        </View>
-                    ) : (
-                        <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.orange}}>
-                            <Text style={css.accessible__text}>Недоступно</Text>
-                        </View>
-                    )}
                 </Animated.View>
             </PanGestureHandler>
 
