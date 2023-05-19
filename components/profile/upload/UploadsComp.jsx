@@ -8,8 +8,8 @@ import UploadFile from "./UploadFile";
 import {pusher} from "../../bll";
 
 const UploadsComp = ({route}) => {
-    const { token } = route.params;
     const [fileUri, setFileUri] = useState(null);
+    const [data, setData] = useState([])
 
     const handleFilePick = async () => {
         // { type: 'application/zip' }
@@ -18,21 +18,6 @@ const UploadsComp = ({route}) => {
             setFileUri(result.uri);
         }
     };
-
-
-    const [data, setData] = useState([])
-    useEffect(() => {
-        const getFiles = async () => {
-            console.log(token)
-            const res = await axios.get(linkerURI.myfiles, { headers: { Authorization: `Token ${token}` } })
-
-            setData(res.data)
-            console.log(data)
-            // console.log('data')
-        }
-        getFiles()
-    }, [])
-
     const handleFileUpload = async () => {
         let fileType = fileUri.split('.').pop();
         console.log(fileType)
@@ -56,6 +41,13 @@ const UploadsComp = ({route}) => {
         setFileUri(null);
 
     };
+    useEffect(() => {
+        const getFiles = async () => {
+            const res = await axios.get(linkerURI.myfiles, { headers: { Authorization: `Token ${route.params.token}` } })
+            setData(res.data)
+        }
+        getFiles()
+    }, [])
 
     return (
         <View style={css.bg}>
@@ -74,7 +66,7 @@ const UploadsComp = ({route}) => {
             />
             <Text>Кол-во файлов: {data.length}</Text>
             <ScrollView>
-                {data.map( elem => <UploadFile file={elem} key={data.indexOf(elem)} />)}
+                {data.map( elem => <UploadFile file={elem} key={data.indexOf(elem)} token={route.params.token} />)}
             </ScrollView>
         </View>
     );

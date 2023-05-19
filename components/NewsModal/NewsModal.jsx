@@ -2,7 +2,7 @@ import {FlatList, Modal, StyleSheet, Text, TouchableWithoutFeedback, View} from 
 import {AntDesign} from "@expo/vector-icons";
 import {useEffect, useRef, useState} from "react";
 import axios from "axios";
-import {pusher} from "../bll";
+import {percentWidth, pusher} from "../bll";
 import TextLink from "../TextLink";
 import Pagination from "react-native-pagination";
 import {defaultStyles, linkerURI} from "../styles";
@@ -58,7 +58,7 @@ export default function NewsModal({state, setState}){
     return (
         <Modal visible={state} animationType='fade' transparent={true}>
             <View style={modals.modalWindow}>
-                <AntDesign name="closecircleo" size={62} color="white" style={modals.modalWindow__icon} onPress={() => setState(false)}/>
+                <AntDesign name="closecircleo" size={percentWidth(13)} color="white" style={modals.modalWindow__icon} onPress={() => setState(false)}/>
                 <View style={modals.modalWindow__box}>
                     <View style={modals.modalWindow__header__box}>
                         <Text style={modals.modalWindow__header}>
@@ -125,7 +125,7 @@ const modals = StyleSheet.create({
     },
     modalWindow__icon: {
         position: 'absolute',
-        margin: 20,
+        margin: 15,
         top: 0,
         right: 0,
     },

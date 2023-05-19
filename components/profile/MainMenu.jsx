@@ -134,7 +134,13 @@ const MainMenu = ({ route, navigation }) => {
 
                 <ScrollView style={css.scroll}>
                     <View style={css.userData}>
-                        {buttons.map( (element, index) => <CustomButton key={index} text={element.title} actionFunc={element.action} style={element.styles} />)}
+                        {buttons.map( (element, index) => (
+                            <CustomButton
+                                key={index}
+                                text={element.title}
+                                actionFunc={element.action}
+                                style={element.styles} />
+                        ))}
                     </View>
                 </ScrollView>
             </View>

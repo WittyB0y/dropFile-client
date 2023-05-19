@@ -4,7 +4,7 @@ import CustomButton from "../../CustomButton";
 import {useRef, useState} from "react";
 import {PanGestureHandler, State} from "react-native-gesture-handler";
 import ModalFile from "./ModalFile";
-import {percentWidth, zeroOrNo} from "../../bll";
+import {getFullDate, percentWidth, zeroOrNo} from "../../bll";
 
 const FileBox = ({ file }) => {
     const [swipe, setSwipe] = useState(false)
@@ -42,10 +42,6 @@ const FileBox = ({ file }) => {
                 fontSize: percentWidth(5)
             }
         }
-    }
-    const getFullDate = (bigDate) => {
-        const dd = new Date(Date.parse(bigDate))
-        return `${zeroOrNo(dd.getDate())}.${zeroOrNo(dd.getUTCMonth(), 1)}.${dd.getFullYear()} ${zeroOrNo(dd.getUTCHours(), 3)}:${zeroOrNo(dd.getMinutes())}`
     }
     const fileNaming = (fileName) => {
         return fileName.replace(/^(.{6}).*?(\.[^.]+)$/, (match, p1, p2) => p1 + '...' + p2) // "Screen...png"
