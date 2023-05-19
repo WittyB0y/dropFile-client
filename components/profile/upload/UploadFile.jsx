@@ -3,16 +3,22 @@ import {Animated, Image, StyleSheet, Text, View} from "react-native";
 import CustomButton from "../../CustomButton";
 import {percentWidth} from "../../bll";
 import {useRef, useState} from "react";
-import {defaultStyles} from "../../styles";
+import {defaultStyles, linkerURI} from "../../styles";
+import ModalUpload from "./ModalUpload";
+import axios from "axios";
 
-const UploadFile = ({file}) => {
+const UploadFile = ({file, token}) => {
     const [swipe, setSwipe] = useState(false)
     const [modalWindow, setModalWindow] = useState(false)
+    const [data, setData] = useState([{}])
     const offsetX = useRef(new Animated.Value(0)).current;
 
+    // console.log(file)
+
     const btn = {
-        title: 'Найсроить доступ',
-        action: () => {
+        title: 'Настроить доступ',
+        action: async () => {
+            await getData()
             Animated.timing(offsetX, {
                 toValue: 0,
                 duration: 400,
@@ -25,7 +31,7 @@ const UploadFile = ({file}) => {
         },
         style: {
             btnBox: {
-                backgroundColor: '#250d7c',
+                backgroundColor: '#a6712b',
                 width: '30%',
                 right: '5%',
                 position: 'absolute',
@@ -35,9 +41,9 @@ const UploadFile = ({file}) => {
                 alignItems: 'center',
             },
             btnText: {
-                color: '#fff',
+                color: '#d4d4d4',
                 textAlign: 'center',
-                fontSize: percentWidth(5)
+                fontSize: percentWidth(4)
             }
         }
     }
@@ -95,7 +101,6 @@ const UploadFile = ({file}) => {
             }, 110)
         }
     }
-
     const getMinsAgo = (bigDate) => {
         const currentDate = new Date();
         const serverDate = new Date(Date.parse(bigDate));
@@ -104,9 +109,19 @@ const UploadFile = ({file}) => {
         return `${timeDiffMinutes} мин. назад`
     }
 
+    // console.log(file.id)
+    const getData = () => {
+        axios.get(linkerURI.createPermission,{headers: {
+                'Authorization': `Token ${token}`,
+                'fileid': file.id
+            }} )
+            .then( res => setData(res.data))
+        console.log(data)
+    }
     return (
         <View style={css.box}>
-            {/*<ModalFile state={modalWindow} setState={setModalWindow} img={file.renderdata} />*/}
+            <ModalUpload state={modalWindow} setState={setModalWindow} fileName={file.name} token={token} data={data} />
+            {/*<CustomButton text={'Test'} actionFunc={getData} style={{}} />*/}
 
             <PanGestureHandler onGestureEvent={handleGesture} activeOffsetX={[-10, 10]}>
                 <Animated.View style={{...css.file, transform: [{ translateX: offsetX }]}}>
@@ -118,7 +133,7 @@ const UploadFile = ({file}) => {
 
                             <View style={css.file__data}>
                                 {fields.map( element => (
-                                    <View style={css.file__data__box}>
+                                    <View style={css.file__data__box} key={fields.indexOf(element)}>
                                         <View style={css.file__data__text__box}>
                                             <Text style={css.file__data__text__label}>{element.fieldName}: </Text>
                                         </View>
