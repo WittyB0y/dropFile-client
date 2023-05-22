@@ -8,8 +8,8 @@ import {pusher} from "./bll";
 
 const LoginScreen = ({navigation}) => {
     // TODO
-    const [username, setUsername] = useState('act');
-    const [password, setPassword] = useState('08011955Artem');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     const loadScreen = (nameScreen, token='', from={}) => {
         const data = {...from, ...token}
@@ -46,7 +46,7 @@ const LoginScreen = ({navigation}) => {
                         console.log(error)
                     }
                 });
-        };
+        }
     };
 
     const buttons = [

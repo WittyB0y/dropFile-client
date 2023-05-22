@@ -11,6 +11,11 @@ export function pusher(message = '', duration = 'SHORT'){
     }
 }
 
+export const getFullDate = (bigDate) => {
+    const dd = new Date(Date.parse(bigDate))
+    return `${zeroOrNo(dd.getDate())}.${zeroOrNo(dd.getUTCMonth(), 1)}.${dd.getFullYear()} ${zeroOrNo(dd.getUTCHours(), 3)}:${zeroOrNo(dd.getMinutes())}`
+}
+
 export function logout (token) {
     axios.post(linkerURI.logout, {},{ headers: { Authorization: `Token ${token}` } })
         .then( () => pusher('Выход выполнен!'))

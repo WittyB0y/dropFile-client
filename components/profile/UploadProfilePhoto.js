@@ -12,10 +12,8 @@ export default async function pickImage(token, func, id) {
     });
 
     if (result.assets) {
-        // получаем путь к файлу из свойства "uri"
         let localUri = result.assets[0].uri;
         console.log(localUri)
-        // конвертируем путь к файлу в объект "Files"
         let file = await FileSystem.getInfoAsync(localUri);
         let fileType = file.uri.split('.').pop(); // получаем расширение файла
 
@@ -28,6 +26,7 @@ export default async function pickImage(token, func, id) {
         });
         formData.append('userid', id);
         console.log('axios', id)
+        console.log(formData)
         axios
             .patch(`${linkerURI.upPhoto}${id}/`, formData, {
                 headers: {

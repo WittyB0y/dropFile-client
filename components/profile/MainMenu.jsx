@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Image, ScrollView, Text, View, StyleSheet, TouchableWithoutFeedback} from "react-native";
 import {defaultStyles, deviceINFO, linkerURI} from "../styles";
 import axios from "axios";
-import pickImage from "./UploadProfilePhoto";
 import CustomButton from "../CustomButton";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import ProfileModal from "./ProfileModal";
@@ -11,6 +10,8 @@ import {logout, percentWidth, pusher} from "../bll";
 const devIDdev = deviceINFO.id
 
 async function controllerPermis(navigation, data, userid, token) {
+
+
     if (data == null) {
         const data = { devid: devIDdev };
         const config = {headers: { Authorization: `Token ${token}` } }
@@ -44,7 +45,7 @@ const MainMenu = ({ route, navigation }) => {
 
     const buttons = [
         {
-            title: 'Загрузить',
+            title: 'Загрузить файлы',
             action: () => loadScreen('Загрузки', token),
             styles: {
                 btnBox: {
@@ -54,7 +55,7 @@ const MainMenu = ({ route, navigation }) => {
             }
         },
         {
-            title: 'Файлы',
+            title: 'Доступные файлы',
             action: () => loadScreen('Файлы', token),
             styles: {
                 btnBox: {
@@ -122,7 +123,13 @@ const MainMenu = ({ route, navigation }) => {
 
                 <ScrollView style={css.scroll}>
                     <View style={css.userData}>
-                        {buttons.map( (element, index) => <CustomButton key={index} text={element.title} actionFunc={element.action} style={element.styles} />)}
+                        {buttons.map( (element, index) => (
+                            <CustomButton
+                                key={index}
+                                text={element.title}
+                                actionFunc={element.action}
+                                style={element.styles} />
+                        ))}
                     </View>
                 </ScrollView>
             </View>

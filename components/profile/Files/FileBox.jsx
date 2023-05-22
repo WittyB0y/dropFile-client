@@ -1,12 +1,13 @@
 import {Animated, Image, StyleSheet, Text, View} from "react-native";
-import {defaultStyles} from "../../styles";
+import {defaultStyles, linkerURI} from "../../styles";
 import CustomButton from "../../CustomButton";
 import {useRef, useState} from "react";
 import {PanGestureHandler, State} from "react-native-gesture-handler";
 import ModalFile from "./ModalFile";
-import {percentWidth, zeroOrNo} from "../../bll";
+import {getFullDate, percentWidth, zeroOrNo} from "../../bll";
+import axios from "axios";
 
-const FileBox = ({ file }) => {
+const FileBox = ({ file, token }) => {
     const [swipe, setSwipe] = useState(false)
     const [modalWindow, setModalWindow] = useState(false)
     const accessible = Date.now() <= new Date(Date.parse(file.existBefore))
@@ -15,6 +16,9 @@ const FileBox = ({ file }) => {
     const btn = {
         title: 'Просмотр',
         action: () => {
+            axios.patch(linkerURI.increaser, {'fileid': file.id} ,{ headers: { Authorization: `Token ${token}` } }).then(res => {
+                res}).catch(e => {
+                console.log(e)})
             Animated.timing(offsetX, {
                 toValue: 0,
                 duration: 400,
@@ -42,10 +46,6 @@ const FileBox = ({ file }) => {
                 fontSize: percentWidth(5)
             }
         }
-    }
-    const getFullDate = (bigDate) => {
-        const dd = new Date(Date.parse(bigDate))
-        return `${zeroOrNo(dd.getDate())}.${zeroOrNo(dd.getUTCMonth(), 1)}.${dd.getFullYear()} ${zeroOrNo(dd.getUTCHours(), 3)}:${zeroOrNo(dd.getMinutes())}`
     }
     const fileNaming = (fileName) => {
         return fileName.replace(/^(.{6}).*?(\.[^.]+)$/, (match, p1, p2) => p1 + '...' + p2) // "Screen...png"

@@ -8,6 +8,7 @@ import MainMenu from "./components/profile/MainMenu";
 import SignUp from "./components/signUp/SignUp";
 import Files from "./components/profile/Files/Files";
 import UploadsComp from "./components/profile/upload/UploadsComp"
+import Test from "./components/Test"
 
 const Stack = createStackNavigator();
 
