@@ -3,9 +3,11 @@ import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import ImageViewer from "react-native-image-zoom-viewer";
 import {percentWidth, pusher} from "../../bll";
 import {useState} from "react";
+import {defaultStyles, LINK} from "../../styles";
 
 const ModalFile = ({state, setState, img}) => {
     const [photo, setPhoto] = useState(0)
+
     return (
         <Modal visible={state} animationType={'fade'}>
             <View style={css.content}>
@@ -19,21 +21,21 @@ const ModalFile = ({state, setState, img}) => {
                     renderArrowLeft={() => (
                         <EvilIcons
                             name="chevron-left"
-                            size={percentWidth(10)}
-                            color="#fff"
+                            size={percentWidth(15)}
+                            color={defaultStyles.buttons.yellow}
                             onPress={() => photo >= 1 && setPhoto(photo - 1)}
                         />
                     )}
                     renderArrowRight={() => (
                         <EvilIcons
                             name="chevron-right"
-                            size={percentWidth(10)}
-                            color="#fff"
+                            size={percentWidth(15)}
+                            color={defaultStyles.buttons.yellow}
                             onPress={() => photo < img.length - 1 && setPhoto(photo + 1)}
                         />
                     )}
                     index={photo}
-                    imageUrls={img.map( elem => ({url: elem.fileLink}))}
+                    imageUrls={img.map( elem => ({url: `${LINK}${elem.fileLink}`}))}
                     renderIndicator={(currentIndex, allSize) => (
                         <View style={css.counter__box}>
                             <Text style={css.counter}>

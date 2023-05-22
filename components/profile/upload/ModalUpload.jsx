@@ -4,127 +4,29 @@ import {percentWidth, pusher} from "../../bll";
 import {useState} from "react";
 import CustomButton from "../../CustomButton";
 import axios from "axios";
-import {linkerURI} from "../../styles";
+import {defaultStyles, linkerURI} from "../../styles";
 import User from "./User";
 
-const ModalUpload = ({state, setState, fileName, token, data}) => {
+const ModalUpload = ({state, setState, fileName, token, data, fileid}) => {
     const [user, setUser] = useState('')
     const [accessPeriod, setAccessPeriod] = useState('');
+    function removeItemFromArray(item) {
+        const index = data.indexOf(item);
+        if (index > -1) {
+            data.splice(index, 1);
+        }
+    }
 
-    // console.log(fileName)
-    // const data = [
-    //     {
-    //         "id": 27,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_be169678-b17b-45e6-b090-31d111fb5965.png "
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T20:36:07.878693+03:00",
-    //         "existBefore": "2023-05-19T20:41:07.877950+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     },
-    //     {
-    //         "id": 28,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_29bd7ab6-8579-4ee7-8de3-159df17dd83c.png"
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T20:45:41.941035+03:00",
-    //         "existBefore": "2023-05-20T11:00:41.941035+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     },
-    //     {
-    //         "id": 29,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_29bd7ab6-8579-4ee7-8de3-159df17dd83c.png"
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T21:32:46.004530+03:00",
-    //         "existBefore": "2023-05-21T08:54:46.004530+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     },
-    //     {
-    //         "id": 30,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_29bd7ab6-8579-4ee7-8de3-159df17dd83c.png"
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T21:33:02.173522+03:00",
-    //         "existBefore": "2023-05-22T21:33:02.173522+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     },
-    //     {
-    //         "id": 31,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_29bd7ab6-8579-4ee7-8de3-159df17dd83c.png"
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T23:10:02.189095+03:00",
-    //         "existBefore": "2023-05-20T02:52:02.189095+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     },
-    //     {
-    //         "id": 32,
-    //         "lookingSeeUsers": [
-    //             {
-    //                 "id": 2,
-    //                 "username": "Meow",
-    //                 "photo_url": "/media/users/2/profile/profile_photo_29bd7ab6-8579-4ee7-8de3-159df17dd83c.png"
-    //             }
-    //         ],
-    //         "createdAt": "2023-05-19T23:10:38.562379+03:00",
-    //         "existBefore": "2023-05-20T00:32:38.562379+03:00",
-    //         "seenUser": 0,
-    //         "webSee": false,
-    //         "userSeeClient": true,
-    //         "amount": 0,
-    //         "fileid": 6
-    //     }
-    // ]
 
-    const postData = (username, time) => {
+
+    const postData = (username, time, fileid) => {
         const dataPost = {
-            'fileid': 6,
+            'fileid': fileid,
             'user':username,
-            'time':time
+            'time':time,
         }
         axios.post(linkerURI.createPermission, dataPost,{headers: {
-                'Authorization': `Token e6dd7025302ea6d9165f88f9f434ab03c0266522`
+                'Authorization': `Token ${token}`,
             }},
         ).then(
             response => {pusher('Успешно!')}
@@ -132,7 +34,6 @@ const ModalUpload = ({state, setState, fileName, token, data}) => {
             error => {pusher('Пользователь не найден!')}
         )
     }
-
     return(
         <Modal visible={state} animationType={'fade'} transparent={true} statusBarTranslucent={true}>
             <View style={css.bg}>
@@ -164,27 +65,30 @@ const ModalUpload = ({state, setState, fileName, token, data}) => {
                         clearTextOnFocus={true}
                         keyboardType={"numeric"}
                     />
-                    <CustomButton text={'Загрузить'} actionFunc={() => {
-                        postData(user, accessPeriod)
-                        // getData()
-                        console.log(user, accessPeriod)
+                    <CustomButton text={'Предоставить доступ'} actionFunc={() => {
+                        postData(user, accessPeriod, fileid)
                         setUser('')
                         setAccessPeriod('')
-                    }} style={{btnBox: {paddingHorizontal: 10}, btnText:{}}} />
+                    }} style={{btnBox: {paddingHorizontal: 10, backgroundColor: defaultStyles.buttons.blue}, btnText:{}}} />
                 </View>
 
                 <View style={css.userList}>
-                    <ScrollView>
-                        <View style={{display: 'flex', gap: 5}}>
-                            {data.map( element => (
-                                <User key={element.id + data.indexOf(element)}
-                                      existBefore={element.existBefore}
-                                      seenUser={element.seenUser}
-                                      lookingSeeUsers={element.lookingSeeUsers}
-                                />
-                            ))}
-                        </View>
-                    </ScrollView>
+                    {data && (
+                        <ScrollView>
+                            <View style={{display: 'flex', gap: 5}}>
+                                {data.map( element => (
+                                    <User key={element.id + data.indexOf(element)}
+                                          existBefore={element.existBefore}
+                                          seenUser={element.seenUser}
+                                          lookingSeeUsers={element.lookingSeeUsers}
+                                          fileid={fileid}
+                                          token={token}
+                                          user={element}
+                                    />
+                                ))}
+                            </View>
+                        </ScrollView>
+                    )}
                 </View>
             </View>
         </Modal>

@@ -18,14 +18,22 @@
       "supportsTablet": true
     },
     "android": {
-      "permissions": ["READ_PHONE_STATE"],
+      "permissions": [
+        "READ_PHONE_STATE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bobrovnikk.doter3"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bd3a97b1-e85f-4387-ae5b-0d8ecbefa333"
+      }
     }
   }
 }

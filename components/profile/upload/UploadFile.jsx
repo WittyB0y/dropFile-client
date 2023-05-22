@@ -1,19 +1,19 @@
 import {PanGestureHandler, State} from "react-native-gesture-handler";
-import {Animated, Image, StyleSheet, Text, View} from "react-native";
+import {Animated, Image, StyleSheet, Text, TouchableWithoutFeedback, View} from "react-native";
 import CustomButton from "../../CustomButton";
-import {percentWidth} from "../../bll";
+import {percentWidth, pusher} from "../../bll";
 import {useRef, useState} from "react";
 import {defaultStyles, linkerURI} from "../../styles";
 import ModalUpload from "./ModalUpload";
 import axios from "axios";
+import {MaterialCommunityIcons} from "@expo/vector-icons";
 
 const UploadFile = ({file, token}) => {
     const [swipe, setSwipe] = useState(false)
     const [modalWindow, setModalWindow] = useState(false)
-    const [data, setData] = useState([{}])
+    const [data, setData] = useState([])
     const offsetX = useRef(new Animated.Value(0)).current;
-
-    // console.log(file)
+    const [visible, setVisible] = useState(true)
 
     const btn = {
         title: 'Настроить доступ',
@@ -31,7 +31,7 @@ const UploadFile = ({file, token}) => {
         },
         style: {
             btnBox: {
-                backgroundColor: '#a6712b',
+                backgroundColor: defaultStyles.buttons.purple,
                 width: '30%',
                 right: '5%',
                 position: 'absolute',
@@ -41,7 +41,7 @@ const UploadFile = ({file, token}) => {
                 alignItems: 'center',
             },
             btnText: {
-                color: '#d4d4d4',
+                color: 'black',
                 textAlign: 'center',
                 fontSize: percentWidth(4)
             }
@@ -109,7 +109,16 @@ const UploadFile = ({file, token}) => {
         return `${timeDiffMinutes} мин. назад`
     }
 
-    // console.log(file.id)
+    function deleteFile(token, fileid) {
+        axios.delete(linkerURI.createPermission, {headers: {
+                'Authorization': `Token ${token}`,
+                'fileid': fileid
+            }}).then(res=> {
+                setVisible(false)
+                pusher('Файл удалён!')
+            }).catch(e=>pusher('Ошибка удаления!'))
+
+    }
     const getData = () => {
         axios.get(linkerURI.createPermission,{headers: {
                 'Authorization': `Token ${token}`,
@@ -119,44 +128,55 @@ const UploadFile = ({file, token}) => {
         console.log(data)
     }
     return (
-        <View style={css.box}>
-            <ModalUpload state={modalWindow} setState={setModalWindow} fileName={file.name} token={token} data={data} />
-            {/*<CustomButton text={'Test'} actionFunc={getData} style={{}} />*/}
+        <View>
+        {visible && (
+            <View style={css.box}>
+                <ModalUpload state={modalWindow} setState={setModalWindow} fileName={file.name} token={token} data={data} fileid={file.id} />
 
-            <PanGestureHandler onGestureEvent={handleGesture} activeOffsetX={[-10, 10]}>
-                <Animated.View style={{...css.file, transform: [{ translateX: offsetX }]}}>
-                    <View style={css.file}>
-                        <View style={css.verticalData}>
-                            <View style={css.file__profile}>
-                                <Image source={{ uri : 'https://i.yapx.ru/WCenU.png'}} style={css.profile__img} />
-                            </View>
-
-                            <View style={css.file__data}>
-                                {fields.map( element => (
-                                    <View style={css.file__data__box} key={fields.indexOf(element)}>
-                                        <View style={css.file__data__text__box}>
-                                            <Text style={css.file__data__text__label}>{element.fieldName}: </Text>
+                <PanGestureHandler onGestureEvent={handleGesture} activeOffsetX={[-10, 10]}>
+                    <Animated.View style={{...css.file, transform: [{ translateX: offsetX }]}}>
+                        <View style={css.file}>
+                            <View style={css.verticalData}>
+                                <View style={css.file__profile}>
+                                    <Image source={{ uri : 'https://i.yapx.ru/WCenU.png'}} style={css.profile__img} />
+                                </View>
+                                <View style={{position: 'absolute', top: -10, right: -30, zIndex: 1, margin: 10}}>
+                                    <TouchableWithoutFeedback onPress={()=> {
+                                        deleteFile(token, file.id)
+                                        console.log(token, file.id)}}>
+                                        <View>
+                                            <MaterialCommunityIcons name="file-remove-outline" size={27} color={defaultStyles.buttons.orange} />
                                         </View>
-                                        <View style={css.file__data_output}>
-                                            <Text style={css.file__data__text__description}>{element.isDate ? getFullDate(element.data, !element.isDate) : fileNaming(element.data, !element.short)}</Text>
+                                    </TouchableWithoutFeedback>
+                                </View>
+                                <View style={css.file__data}>
+                                    {fields.map( element => (
+                                        <View style={css.file__data__box} key={fields.indexOf(element)}>
+                                            <View style={css.file__data__text__box}>
+                                                <Text style={css.file__data__text__label}>{element.fieldName}: </Text>
+                                            </View>
+                                            <View style={css.file__data_output}>
+                                                <Text style={css.file__data__text__description}>{element.isDate ? getFullDate(element.data, !element.isDate) : fileNaming(element.data, !element.short)}</Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                ))}
-                            </View>
+                                    ))}
+                                </View>
 
+                            </View>
                         </View>
-                    </View>
-                    <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.green}}>
-                        <Text style={css.accessible__text}>{getMinsAgo(fields[2].data)}</Text>
-                    </View>
+                        <View style={{...css.accessible, backgroundColor: defaultStyles.buttons.green}}>
+                            <Text style={css.accessible__text}>{getMinsAgo(fields[2].data)}</Text>
+                        </View>
 
-                </Animated.View>
-            </PanGestureHandler>
+                    </Animated.View>
+                </PanGestureHandler>
 
-            {swipe && (
-                <CustomButton text={btn.title} actionFunc={btn.action} style={btn.style}/>
-            )}
+                {swipe && (
+                    <CustomButton text={btn.title} actionFunc={btn.action} style={btn.style}/>
+                )}
 
+            </View>
+        )}
         </View>
     )
 }
