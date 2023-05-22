@@ -1,11 +1,13 @@
 import {Text, View, StyleSheet, Image, TouchableWithoutFeedback} from "react-native";
 import {AntDesign, Feather, Ionicons} from "@expo/vector-icons";
-import {getFullDate, percentWidth} from "../../bll";
-import {LINK} from "../../styles";
+import {getFullDate, percentWidth, pusher} from "../../bll";
+import {LINK, linkerURI} from "../../styles";
+import axios from "axios";
+import {useState} from "react";
 
-const User = ({existBefore, seenUser, lookingSeeUsers}) => {
-
-    const users = lookingSeeUsers[0]
+const User = ({fileid, token, user}) => {
+    const users = user.lookingSeeUsers[0]
+    const [isVisible, setIsVisible] = useState(true);
 
     // console.log(users)
 
@@ -16,39 +18,48 @@ const User = ({existBefore, seenUser, lookingSeeUsers}) => {
         console.log('Watch')
     }
     const Close = () => {
-        console.log('Close')
-        console.log(`http://26.242.229.65:8000${users.photo_url}`)
+        axios.delete(linkerURI.createPermission, {headers: {
+                'Authorization': `Token ${token}`,
+                'Userid':user.lookingSeeUsers[0].id,
+                'Fileid': fileid
+        }})
+            .then(res=> {
+                setIsVisible(false);
+                pusher('Пользователь удалён!');
+            })
+            .catch(error=> pusher('Потзователь уже удалён, МонYes:), обнови страницу...'));
     }
 
-    return (
-        <View style={css.bg}>
-            <View style={css.imageHandler}>
-                <Image source={{uri: `http://26.242.229.65:8000${users.photo_url}`}} style={css.img} />
-                <Text style={{...css.whiteText}}>{users.username}</Text>
-            </View>
-            <View style={css.dataHandler}>
-                <View style={css.subText}>
-                    <Text style={{...css.whiteText}}>Доступно до:</Text>
-                    {existBefore.toString() && <Text style={{...css.whiteText}}>{getFullDate(existBefore)}</Text>}
+    return (<View>
+        {isVisible ? (<View style={css.bg}>
+                <View style={css.imageHandler}>
+                    <Image source={{uri: `${LINK}${users.photo_url}`}} style={css.img} />
+                    <Text style={{...css.whiteText}}>{users.username}</Text>
                 </View>
-                <View style={css.subText}>
-                    <Text style={{...css.whiteText}}>Просмотр:</Text>
-                    {seenUser.toString() && <Text style={{...css.whiteText}}>{seenUser}</Text>}
+                <View style={css.dataHandler}>
+                    <View style={css.subText}>
+                        <Text style={{...css.whiteText}}>Доступно до:</Text>
+                        {user.existBefore.toString() && <Text style={{...css.whiteText}}>{getFullDate(user.existBefore)}</Text>}
+                    </View>
+                    <View style={css.subText}>
+                        <Text style={{...css.whiteText}}>Просмотр:</Text>
+                        {user.seenUser.toString() && <Text style={{...css.whiteText}}>{user.seenUser}</Text>}
+                    </View>
                 </View>
-            </View>
 
-            <View style={css.rightButtons}>
-                <TouchableWithoutFeedback onPress={Close}>
-                    <AntDesign name="close" size={percentWidth(7)} color="#323232" />
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={Watch}>
-                    <Ionicons name="eye-outline" size={percentWidth(7)} color="#323232" />
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={Edit}>
-                    <Feather name="edit-2" size={percentWidth(7)} color="#323232" />
-                </TouchableWithoutFeedback>
-            </View>
-        </View>
+                <View style={css.rightButtons}>
+                    <TouchableWithoutFeedback onPress={Close}>
+                        <AntDesign name="close" size={percentWidth(7)} color="#323232" />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={Watch}>
+                        <Ionicons name="eye-outline" size={percentWidth(7)} color="#323232" />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={Edit}>
+                        <Feather name="edit-2" size={percentWidth(7)} color="#323232" />
+                    </TouchableWithoutFeedback>
+                </View>
+            </View>): (<View></View>)}</View>
+
     )
 }
 

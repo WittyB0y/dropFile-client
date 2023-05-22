@@ -23,7 +23,6 @@ export default function Navigate() {
             <Stack.Screen name={'Регистрация'} component={SignUp}/>
             <Stack.Screen name={'Файлы'} component={Files}/>
             <Stack.Screen name={'Загрузки'} component={UploadsComp}/>
-            <Stack.Screen name={'Тестовая страница'} component={Test}/>
         </Stack.Navigator>
     </NavigationContainer>
     );

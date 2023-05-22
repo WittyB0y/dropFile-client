@@ -28,7 +28,7 @@ function Test() {
             'time':time
 
         }
-        axios.post('http://26.242.229.65:8000/api/v1/createpermissons/',data,{headers: {
+        axios.post('http://192.168.31.78:8000/api/v1/createpermissons/',data,{headers: {
                     'Authorization': `Token e6dd7025302ea6d9165f88f9f434ab03c0266522`
         }},
         ).then(
@@ -38,7 +38,7 @@ function Test() {
         )
     }
     const getData = () => {
-        axios.get('http://26.242.229.65:8000/api/v1/createpermissons/',{headers: {
+        axios.get('http://192.168.31.78:8000/api/v1/createpermissons/',{headers: {
                 'Authorization': `Token e6dd7025302ea6d9165f88f9f434ab03c0266522`,
                 'fileid': '4'
             }} )
